@@ -1,7 +1,7 @@
 {
-  "name": "antd-pro-toolkit",
-  "version": "0.2.9",
-  "description": "antd pro toolkit",
+  "name": "antd-pro-biz",
+  "version": "0.1.1",
+  "description": "antd pro biz",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "lib/index.d.ts",
@@ -21,19 +21,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/m430/antd-pro-toolkit.git"
+    "url": "git+https://github.com/m430/antd-pro-biz.git"
   },
   "keywords": [
     "antd",
     "pro",
-    "toolkit"
+    "biz"
   ],
   "author": "m430",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/m430/antd-pro-toolkit/issues"
+    "url": "https://github.com/m430/antd-pro-biz/issues"
   },
-  "homepage": "https://github.com/m430/antd-pro-toolkit#readme",
+  "homepage": "https://github.com/m430/antd-pro-biz#readme",
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.3.4",

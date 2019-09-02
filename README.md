@@ -1,32 +1,18 @@
-# antd-pro-toolkit
-🐜 ant design pro toolkit is an advance common components library.
+# antd-pro-biz
+🐜 ant design biz is an advance biz components library.
 
 ## Usage
 
 ```bash
-npm install --save antd-pro-toolkit
+npm install --save antd-pro-biz
 ```
 
 ```javascript
-import { SlideVerify } from 'antd-pro-toolkit';
+import { AddressSelector } from 'antd-pro-biz';
 ```
 
 ## Components
 
-- [x] AvatarList
-- [x] Charts-Bar
-- [x] Charts-Gauge
-- [x] Charts-MiniArea
-- [x] Charts-MiniProgress
-- [x] Charts-Pie
-- [x] Charts-Radar
-- [x] Charts-TagCloud
-- [x] Charts-TimelineChart
-- [x] Charts-WaterWave
-- [x] Headline
-- [x] NumberInfo
-- [x] ScrollSelect
-- [x] SlideVerify
-- [x] Trend
+- [x] AddressSelector
 
 

@@ -1,2 +1,2 @@
 
-export { default as TabCascader } from './TabCascader/index';
+export { default as AddressSelector } from './AddressSelector/index';

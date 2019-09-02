@@ -6,7 +6,6 @@
 // When you add this file, we won't add the default configurations which is similar
 // to "React Create App". This only has babel loader to load JavaScript.
 const path = require('path');
-const { resolve } = require('../config/utils/helper');
 
 module.exports = ({ config }) => {
   config.module.rules.push(
@@ -14,10 +13,10 @@ module.exports = ({ config }) => {
       test: /\.tsx?$/,
       use: [
         {
-          loader: resolve('babel-loader'),
+          loader: require.resolve('babel-loader'),
         },
         {
-          loader: resolve('awesome-typescript-loader'),
+          loader: require.resolve('awesome-typescript-loader'),
         },
       ],
       exclude: /node_modules/
