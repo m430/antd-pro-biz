@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { TabCascader, PanelData, Item, Result } from 'antd-pro-toolkit';
-import { CascaderProps } from 'antd-pro-toolkit/lib/TabCascader';
+import { CascaderProps, TabData } from 'antd-pro-toolkit/lib/TabCascader';
 
 export interface GroupData {
   code: string;
@@ -109,26 +109,27 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     let groupCode = value[0].groupCode;
     let panelData = dataSource.find((panelData: PanelData) => panelData.code == groupCode);
     if (panelData && panelData.data.length > 0) {
-      for (let i = 0; i < value.length; i++) {
+      panelData.data = this.handlePatchPanelData(panelData.data, value[value.length - 1]);
+      let valueIdx = 0
+      for (let i = 0; i < panelData.data.length; i++) {
         let panelIdx = i;
         if (groupCode == '0') panelIdx++;
-        if (!panelData.data[panelIdx]) {
-          panelData.data[panelIdx] = {
-            title: '',
-            level: 0,
-            entry: false,
-            items: []
-          };
+        let dataItem = panelData.data[panelIdx];
+        dataItem.entry = true;
+        if (dataItem.level !== value[valueIdx].level) {
+          continue;
+        } else {
+          dataItem.title = value[valueIdx].name;
         }
-        panelData.data[panelIdx].title = value[i].name;
-        panelData.data[panelIdx].level = value[i].level;
-        panelData.data[panelIdx].entry = true;
-        if (i == value.length - 1) {
+        if (valueIdx == value.length - 1) {
           // 最后一级要把数据初始化出来
-          let res = await this.searchArea({ parentCode: value[i].parentCode, level: value[i].level });
+          let res = await this.searchArea({ parentCode: value[valueIdx].parentCode, level: value[valueIdx].level });
           if (res.errorCode === 0) {
-            panelData.data[panelIdx].items = res.data;
+            dataItem.items = res.data;
           }
+          break;
+        } else {
+          valueIdx++;
         }
       }
       for (let j = 0; j < dataSource.length; j++) {
@@ -244,8 +245,6 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     let gCode = Number(item.groupCode);
     let maxLevel = dataSource[gCode].maxLevel;
     let groupData = dataSource[gCode].data;
-    let lastData = groupData[groupData.length - 1];
-    let betweenLastLevel = item.level - lastData.level;
     const fillGroupData = async () => {
       for (let i = 0; i < groupData.length; i++) {
         let dataItem = groupData[i];
@@ -280,10 +279,20 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
       return groupData;
     }
+    groupData = this.handlePatchPanelData(groupData, item);
+    return fillGroupData().then(() => {
+      dataSource[gCode].data = groupData;
+      this.setState({ dataSource });
+    })
+  }
+
+  handlePatchPanelData = (tabDatas: Array<TabData>, lastItem: Item): Array<TabData> => {
+    let lastData = tabDatas[tabDatas.length - 1];
+    let betweenLastLevel = lastItem.level - lastData.level;
     if (betweenLastLevel > 0) { // 点击的级别大于tab最后一个的级别
       // 补齐level
-      for (let i = lastData.level + 1; i <= item.level; i++) {
-        groupData.push({
+      for (let i = lastData.level + 1; i <= lastItem.level; i++) {
+        tabDatas.push({
           title: '',
           level: i,
           entry: false,
@@ -291,12 +300,9 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         });
       }
     } else {
-      groupData = groupData.slice(0, groupData.length - Math.abs(betweenLastLevel));
+      tabDatas = tabDatas.slice(0, tabDatas.length - Math.abs(betweenLastLevel));
     }
-    return fillGroupData().then(() => {
-      dataSource[gCode].data = groupData;
-      this.setState({ dataSource });
-    })
+    return tabDatas;
   }
 
   render() {
