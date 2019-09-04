@@ -55,7 +55,6 @@ class Demo1 extends React.Component {
 
   render() {
     const { groups } = this.state;
-    console.log('groups,', groups)
 
     let test = [
       {
@@ -92,7 +91,6 @@ class Demo1 extends React.Component {
       }
     ]
 
-    console.log('test value', test);
     return (
       <DemoContainer>
         <AddressSelector

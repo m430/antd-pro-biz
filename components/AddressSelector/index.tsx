@@ -44,14 +44,15 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   initDataSource = async (topTabData: Array<GroupData>, value?: Array<Item>) => {
-    let { hotCities, dataSource } = this.state;
+    let { dataSource } = this.state;
 
     // 只初始化一次
+    let hotCities: Array<Item> = [];
     if (hotCities.length == 0) {
       let resFirst = await this.searchArea({ isHot: true });
-      let hotCities = resFirst.data || [];
+      hotCities = resFirst.data || [];
 
-      this.setState({ hotCities })
+      this.setState({ hotCities });
     }
 
     let groups = topTabData;
@@ -60,10 +61,10 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         title: g.name,
         maxLevel: g.maxLevel,
         code: g.code,
-        data: []
+        items: []
       }
       if (g.code === '0') {
-        dataItem.data = [
+        dataItem.items = [
           {
             title: '常用市',
             level: 3,
@@ -78,7 +79,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
           }
         ];
       } else if (g.code === '1') {
-        dataItem.data = [
+        dataItem.items = [
           {
             title: '港澳台',
             level: 2,
@@ -87,7 +88,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
           }
         ]
       } else if (g.code === '2') {
-        dataItem.data = [
+        dataItem.items = [
           {
             title: '海外',
             level: 1,
@@ -105,16 +106,15 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   setInitialValue = async (dataSource: Array<PanelData>, value: Array<Item>) => {
-    debugger;
     let groupCode = value[0].groupCode;
     let panelData = dataSource.find((panelData: PanelData) => panelData.code == groupCode);
-    if (panelData && panelData.data.length > 0) {
-      panelData.data = this.handlePatchPanelData(panelData.data, value[value.length - 1]);
+    if (panelData && panelData.items.length > 0) {
+      panelData.items = this.handlePatchPanelData(panelData.items, value[value.length - 1]);
       let valueIdx = 0
-      for (let i = 0; i < panelData.data.length; i++) {
+      for (let i = 0; i < panelData.items.length; i++) {
         let panelIdx = i;
         if (groupCode == '0') panelIdx++;
-        let dataItem = panelData.data[panelIdx];
+        let dataItem = panelData.items[panelIdx];
         dataItem.entry = true;
         if (dataItem.level !== value[valueIdx].level) {
           continue;
@@ -164,11 +164,14 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   handleTopTabChange = (topKey: number) => {
     const { dataSource } = this.state;
-    let tabData = dataSource[topKey].data;
+    let tabData = dataSource[topKey].items;
     if (topKey != 0 && tabData.length > 0 && tabData[0].items.length === 0) {
-      this.searchArea({ groupCode: topKey, level: tabData[0].level }).then(res => {
+      this.searchArea({
+        groupCode: dataSource[topKey].code,
+        level: tabData[0].level
+      }).then(res => {
         tabData[0].items = res.data;
-        dataSource[topKey].data = tabData;
+        dataSource[topKey].items = tabData;
         this.setState({ dataSource });
       })
     }
@@ -176,10 +179,10 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   handleTabChange = (key: number, topKey: number, item: Item) => {
     const { dataSource } = this.state;
-    let tabData = dataSource[topKey].data;
+    let tabData = dataSource[topKey].items;
     let level = tabData[key].level;
-    let query: any = { groupCode: topKey };
-    if (key == 0) {
+    let query: any = { groupCode: dataSource[topKey].code };
+    if (key == 0 && dataSource[topKey].code == '0') {
       query.isHot = true;
     } else {
       if (item) {
@@ -193,7 +196,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       if (topKey == 0 && key > 0) {
         tabData = tabData.slice(0, key + 1);
       }
-      dataSource[topKey].data = tabData;
+      dataSource[topKey].items = tabData;
       this.setState({ dataSource });
       return res;
     });
@@ -201,7 +204,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   buildDataSource = (key: number, topKey: number, item: Item, data: Array<Item>) => {
     let { dataSource } = this.state;
-    let tabData = dataSource[topKey].data;
+    let tabData = dataSource[topKey].items;
     let currentData = tabData[key];
     if (key == 0 && topKey == 0) {
       tabData = tabData.slice(0, key + 2);
@@ -222,7 +225,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     }
     tabData[key].entry = true;
 
-    dataSource[topKey].data = tabData;
+    dataSource[topKey].items = tabData;
     this.setState({ dataSource });
     return dataSource;
   }
@@ -230,12 +233,16 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   handleItemClick = (key: number, topKey: number, item: Item) => {
     let { dataSource } = this.state;
     if (item.level === dataSource[topKey].maxLevel) {
-      dataSource[topKey].data[key].title = item.name;
-      dataSource[topKey].data[key].entry = true;
+      dataSource[topKey].items[key].title = item.name;
+      dataSource[topKey].items[key].entry = true;
       this.setState({ dataSource });
-      return Promise.resolve(dataSource[topKey].data.length - 1);
+      return Promise.resolve(dataSource[topKey].items.length - 1);
     }
-    return this.searchArea({ parentCode: item.code, level: item.level + 1 }).then(res => {
+    return this.searchArea({
+      groupCode: item.groupCode,
+      parentCode: item.code,
+      level: item.level + 1
+    }).then(res => {
       this.buildDataSource(key, topKey, item, res.data);
     });
   }
@@ -244,7 +251,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     let { dataSource } = this.state;
     let gCode = Number(item.groupCode);
     let maxLevel = dataSource[gCode].maxLevel;
-    let groupData = dataSource[gCode].data;
+    let groupData = dataSource[gCode].items;
     const fillGroupData = async () => {
       for (let i = 0; i < groupData.length; i++) {
         let dataItem = groupData[i];
@@ -257,7 +264,9 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         dataItem.entry = true;
         dataItem.items = [];
       }
-      let query: any = {};
+      let query: any = {
+        groupCode: item.groupCode,
+      };
       if (item.level !== maxLevel) {
         query.parentCode = item.code;
         query.level = item.level + 1;
@@ -281,7 +290,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     }
     groupData = this.handlePatchPanelData(groupData, item);
     return fillGroupData().then(() => {
-      dataSource[gCode].data = groupData;
+      dataSource[gCode].items = groupData;
       this.setState({ dataSource });
     })
   }
@@ -309,7 +318,6 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     const { dataSource } = this.state;
     const { placeholder, hint, addonAfter, style, className, onChange, value } = this.props;
 
-    console.log('disdbisni', value)
     return (
       <TabCascader
         onTabChange={this.handleTabChange}
