@@ -109,7 +109,7 @@ class Demo1 extends React.Component {
   }
 }
 storiesOf('Address', module)
-  .add('TabCascader',
+  .add('AddressSelector',
     () => <Demo1 />,
     { notes: addressDoc }
   )

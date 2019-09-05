@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { TabCascader, PanelData, Item, Result } from 'antd-pro-toolkit';
-import { CascaderProps, TabData } from 'antd-pro-toolkit/lib/TabCascader';
+import { CascaderProps, TabData } from 'antd-pro-toolkit/es/TabCascader';
 
 export interface GroupData {
   code: string;

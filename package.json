@@ -14,10 +14,10 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "gh": "storybook-to-ghpages",
-    "dist": "gulp dist",
-    "compile": "gulp compile",
-    "clean": "gulp clean",
-    "pub": "gulp pub"
+    "analyze": "cross-env RUN_ENV=PRODUCTION ANALYZE=TRUE antd-tools run dist",
+    "dist": "cross-env RUN_ENV=PRODUCTION antd-tools run dist",
+    "compile": "antd-tools run compile",
+    "pub": "antd-tools run pub"
   },
   "repository": {
     "type": "git",
@@ -61,6 +61,7 @@
     "babel-plugin-import": "^1.11.2",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.2.1",
     "css-loader": "^2.1.0",
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
@@ -85,25 +86,19 @@
     "ts-loader": "^5.3.3",
     "typescript": "^3.3.3333",
     "webpack": "^4.29.6",
+    "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "^3.2.3",
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
-    "@antv/data-set": "^0.10.2",
     "antd": "^3.13.6",
-    "bizcharts": "^3.5.3-beta.0",
-    "bizcharts-plugin-slider": "^2.1.1-beta.1",
+    "antd-pro-toolkit": "^0.3.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "lodash-decorators": "^6.0.1",
     "moment": "^2.24.0",
     "react": "^16.8.3",
-    "react-dnd": "^7.4.5",
-    "react-dnd-html5-backend": "^7.4.4",
-    "react-dom": "^16.8.3",
-    "react-draggable": "^3.3.0",
-    "react-fittext": "^1.0.0",
-    "umi": "^2.6.17"
+    "react-dom": "^16.8.3"
   },
   "sideEffects": [
     "dist/*",
