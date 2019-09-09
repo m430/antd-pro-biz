@@ -3,15 +3,19 @@ import { storiesOf } from '@storybook/react';
 import { AddressSelector } from '../components';
 import addressDoc from '../components/AddressSelector/README.md';
 import DemoContainer from '../tools/DemoContainer';
-import { Icon } from 'antd';
+import { Icon, Form, Button, Row } from 'antd';
 import axios from '../http';
 
+const FormItem = Form.Item;
+
+@Form.create()
 class Demo1 extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      groups: []
+      groups: [],
+      selectedItems: []
     }
   }
 
@@ -51,9 +55,23 @@ class Demo1 extends React.Component {
 
   handleChange = (selectedItems) => {
     console.log(selectedItems);
+    this.setState({
+      selectedItems
+    });
   }
 
+  handleSubmit = () => {
+    const { form } = this.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+      console.log('values--->', values);
+    });
+  };
+
   render() {
+    const { form } = this.props;
     const { groups } = this.state;
 
     let test = [
@@ -93,17 +111,27 @@ class Demo1 extends React.Component {
 
     return (
       <DemoContainer>
-        <AddressSelector
-          type={1}
-          topTabData={groups}
-          onSearch={this.handleSearch}
-          onChange={this.handleChange}
-          placeholder="请选择地址"
-          addonAfter={<Icon type="ellipsis" />}
-          value={test}
-          style={{ width: 500 }}
-          hint="温馨提示：支持中文、拼音或首字母，如：西安 或 XA"
-        />
+        <div>
+          <FormItem label="地址">
+            {
+              form.getFieldDecorator('address', {
+                initialValue: test
+              })(
+                <AddressSelector
+                  type={1}
+                  topTabData={groups}
+                  onSearch={this.handleSearch}
+                  onChange={this.handleChange}
+                  placeholder="请选择地址"
+                  addonAfter={<Icon type="ellipsis" />}
+                  style={{ width: 500 }}
+                  hint="温馨提示：支持中文、拼音或首字母，如：西安 或 XA"
+                />
+              )
+            }
+          </FormItem>
+          <Button type="primary" onClick={this.handleSubmit}>提交</Button>
+        </div>
       </DemoContainer>
     )
   }

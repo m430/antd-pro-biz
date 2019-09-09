@@ -40,14 +40,15 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   componentWillReceiveProps(nextProps: AddressSelectorProps) {
     const { topTabData, value } = nextProps;
-    this.initDataSource(topTabData, value);
+    if (topTabData != this.props.topTabData) {
+      this.initDataSource(topTabData, value);
+    }
   }
 
   initDataSource = async (topTabData: Array<GroupData>, value?: Array<Item>) => {
-    let { dataSource } = this.state;
+    let { dataSource, hotCities } = this.state;
 
     // 只初始化一次
-    let hotCities: Array<Item> = [];
     if (hotCities.length == 0) {
       let resFirst = await this.searchArea({ isHot: true });
       hotCities = resFirst.data || [];
@@ -123,7 +124,11 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         }
         if (valueIdx == value.length - 1) {
           // 最后一级要把数据初始化出来
-          let res = await this.searchArea({ parentCode: value[valueIdx].parentCode, level: value[valueIdx].level });
+          let res = await this.searchArea({ 
+            groupCode,
+            parentCode: value[valueIdx].parentCode, 
+            level: value[valueIdx].level
+          });
           if (res.errorCode === 0) {
             dataItem.items = res.data;
           }
@@ -204,6 +209,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   buildDataSource = (key: number, topKey: number, item: Item, data: Array<Item>) => {
     let { dataSource } = this.state;
+    let panelData: PanelData = dataSource[topKey];
     let tabData = dataSource[topKey].items;
     let currentData = tabData[key];
     if (key == 0 && topKey == 0) {
@@ -215,7 +221,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       tabData[0].entry = false;
       tabData[key].title = item.name;
     }
-    if (item.level !== 4) {
+    if (item.level !== panelData.maxLevel) {
       tabData.push({
         title: '请选择',
         level: currentData.level + 1,
