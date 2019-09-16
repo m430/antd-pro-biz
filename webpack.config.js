@@ -46,6 +46,12 @@ function externalMoment(config) {
     commonjs: 'lodash-decorators',
     amd: 'lodash-decorators',
   };
+  config.externals['antd-pro-toolkit'] = {
+    root: 'antd-pro-toolkit',
+    commonjs2: 'antd-pro-toolkit',
+    commonjs: 'antd-pro-toolkit',
+    amd: 'antd-pro-toolkit',
+  };
 }
 
 function addBundleAnalyzer(webpackConfig) {

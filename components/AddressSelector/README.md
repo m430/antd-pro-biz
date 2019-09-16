@@ -6,7 +6,8 @@
 
 | 参数        | 说明                             | 类型               | 默认值 |
 | ----------- | -------------------------------- | ------------------ | ------ |
-| topTabData  | `Array<GroupData>`参考上面的结构 | `Array`            |        |
+| type        | 寄/收地址类型，此处根据接口定义填入  | `any`              |        |
+| topTabData  | `Array<GroupData>`参考下面的Model | `Array`            |        |
 | value       | 选择的`item`值                   | `Array<Item>`      |        |
 | style       | 样式对象                         | `CSSProperties`    |        |
 | className   | 样式类                           | `String/Object`    |        |

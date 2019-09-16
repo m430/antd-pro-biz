@@ -1,5 +1,10 @@
 # CHANGELOG
 
+
+
+## [0.1.4] (2019-09-16)
+  - update: 依赖`antd-pro-toolkit`从外部依赖。
+
 ## [0.1.2] (2019-09-09)
   - bugfix: `AddressSelector`级联选择过程中的数据错乱bug。
 

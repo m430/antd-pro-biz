@@ -76,14 +76,6 @@ class Demo1 extends React.Component {
 
     let test = [
       {
-        areaCode1: "CN",
-        areaCode2: "130000",
-        areaCode3: "130600",
-        areaCode4: null,
-        areaName1: "中国",
-        areaName2: "河北省",
-        areaName3: "保定市",
-        areaName4: null,
         code: "130600",
         groupCode: "0",
         id: 54,
@@ -92,14 +84,6 @@ class Demo1 extends React.Component {
         parentCode: "130000",
       },
       {
-        areaCode1: "CN",
-        areaCode2: "130000",
-        areaCode3: "130600",
-        areaCode4: "130602",
-        areaName1: "中国",
-        areaName2: "河北省",
-        areaName3: "保定市",
-        areaName4: "竞秀区",
         code: "130602",
         groupCode: "0",
         id: null,
@@ -115,7 +99,7 @@ class Demo1 extends React.Component {
           <FormItem label="地址">
             {
               form.getFieldDecorator('address', {
-                initialValue: test
+                initialValue: []
               })(
                 <AddressSelector
                   type={1}
