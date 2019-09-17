@@ -11,7 +11,6 @@ export interface GroupData {
 
 export interface AddressSelectorProps extends CascaderProps {
   type?: number;
-  value?: Array<Item>;
   topTabData: Array<GroupData>;
   onSearch: (params?: any) => Promise<Result>;
 }
@@ -124,9 +123,9 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         }
         if (valueIdx == value.length - 1) {
           // 最后一级要把数据初始化出来
-          let res = await this.searchArea({ 
+          let res = await this.searchArea({
             groupCode,
-            parentCode: value[valueIdx].parentCode, 
+            parentCode: value[valueIdx].parentCode,
             level: value[valueIdx].level
           });
           if (res.errorCode === 0) {
@@ -321,8 +320,8 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   render() {
+    const { type, topTabData, onSearch, ...restProps } = this.props;
     const { dataSource } = this.state;
-    const { placeholder, hint, addonAfter, style, className, onChange, value } = this.props;
 
     return (
       <TabCascader
@@ -331,14 +330,8 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         onItemClick={this.handleItemClick}
         onSearchItemClick={this.handleSearchItemClick}
         onSearch={this.handleSearch}
-        onChange={onChange}
-        value={value}
-        style={style}
-        className={className}
         dataSource={dataSource}
-        placeholder={placeholder}
-        addonAfter={addonAfter}
-        hint={hint}
+        {...restProps}
       />
     )
   }
