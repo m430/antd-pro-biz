@@ -24,13 +24,13 @@ class Demo1 extends React.Component {
   }
 
   handleSearch = (params) => {
-    return axios.get('/api/v1/areas/search', {
+    return axios.get('/api/v1/base/areas/search', {
       params
     });
   }
 
   handleSearchGroup = (params) => {
-    return axios.get('/api/v1/areas/search/group', {
+    return axios.get('/api/v1/base/areas/group', {
       params
     })
   }
@@ -70,6 +70,11 @@ class Demo1 extends React.Component {
     });
   };
 
+  handleClear = () => {
+    const { form } = this.props;
+    form.resetFields();
+  };
+
   render() {
     const { form } = this.props;
     const { groups } = this.state;
@@ -98,9 +103,7 @@ class Demo1 extends React.Component {
         <div>
           <FormItem label="地址">
             {
-              form.getFieldDecorator('address', {
-                initialValue: []
-              })(
+              form.getFieldDecorator('address')(
                 <AddressSelector
                   type={1}
                   topTabData={groups}
@@ -109,12 +112,14 @@ class Demo1 extends React.Component {
                   placeholder="请选择地址"
                   addonAfter={<Icon type="ellipsis" />}
                   style={{ width: 500 }}
+                  contentStyle={{ width: 600 }}
                   hint="温馨提示：支持中文、拼音或首字母，如：西安 或 XA"
                 />
               )
             }
           </FormItem>
-          <Button type="primary" onClick={this.handleSubmit}>提交</Button>
+          <Button type="primary" onClick={this.handleSubmit} style={{ marginRight: 12 }}>提交</Button>
+          <Button type="primary" onClick={this.handleClear}>重置</Button>
         </div>
       </DemoContainer>
     )

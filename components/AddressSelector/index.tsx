@@ -39,7 +39,11 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   componentWillReceiveProps(nextProps: AddressSelectorProps) {
     const { topTabData, value } = nextProps;
+    const { dataSource } = this.state;
     if (topTabData != this.props.topTabData) {
+      this.initDataSource(topTabData, value);
+    }
+    if (!value && value != this.props.value && topTabData && topTabData.length > 0 && dataSource.length > 0) {
       this.initDataSource(topTabData, value);
     }
   }
@@ -51,7 +55,6 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     if (hotCities.length == 0) {
       let resFirst = await this.searchArea({ isHot: true });
       hotCities = resFirst.data || [];
-
       this.setState({ hotCities });
     }
 
@@ -100,7 +103,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       return dataItem;
     });
     if (value && value.length > 0) {
-      this.setInitialValue(dataSource, value);
+      await this.setInitialValue(dataSource, value);
     }
     this.setState({ dataSource });
   }
