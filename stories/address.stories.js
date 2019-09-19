@@ -43,7 +43,7 @@ class Demo1 extends React.Component {
         if (g.code == '0') {
           g.maxLevel = 4;
         } else if (g.code == '1') {
-          g.maxLevel = 3;
+          g.maxLevel = 1;
         } else {
           g.maxLevel = 2;
         }
@@ -112,8 +112,8 @@ class Demo1 extends React.Component {
                   placeholder="请选择地址"
                   addonAfter={<Icon type="ellipsis" />}
                   style={{ width: 500 }}
-                  contentStyle={{ width: 600 }}
                   hint="温馨提示：支持中文、拼音或首字母，如：西安 或 XA"
+                  colSpan={8}
                 />
               )
             }

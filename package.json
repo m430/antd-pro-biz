@@ -1,6 +1,6 @@
 {
   "name": "antd-pro-biz",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "antd pro biz",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -92,7 +92,7 @@
   },
   "dependencies": {
     "antd": "^3.13.6",
-    "antd-pro-toolkit": "^0.3.7",
+    "antd-pro-toolkit": "^0.4.0",
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "lodash-decorators": "^6.0.1",

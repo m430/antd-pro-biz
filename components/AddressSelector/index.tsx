@@ -69,7 +69,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       if (g.code === '0') {
         dataItem.items = [
           {
-            title: '常用市',
+            title: '热门',
             level: 3,
             entry: false,
             items: hotCities
@@ -268,7 +268,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
           continue;
         }
         let level = dataItem.level;
-        dataItem.title = level === item.level ? item.name : item[`areaName${level}`];
+        dataItem.title = level === item.level ? item.name : item.parents[item.parents.length - 1].name;
         dataItem.entry = true;
         dataItem.items = [];
       }
