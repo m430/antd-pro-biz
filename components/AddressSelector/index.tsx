@@ -168,8 +168,20 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   handleTopTabChange = (topKey: number) => {
-    const { dataSource } = this.state;
+    let { dataSource } = this.state;
     let tabData = dataSource[topKey].items;
+
+    dataSource = dataSource.map((ds: PanelData) => {
+      if (ds.code === '0') {
+        ds.items = ds.items.slice(0, 2);
+      } else if (ds.code === '1') {
+        ds.items = ds.items.slice(0, 1);
+      } else if (ds.code === '2') {
+        ds.items = ds.items.slice(0, 1);
+      }
+      return ds;
+    });
+
     if (topKey != 0 && tabData.length > 0 && tabData[0].items.length === 0) {
       this.searchArea({
         groupCode: dataSource[topKey].code,
