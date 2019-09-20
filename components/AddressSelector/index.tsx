@@ -115,28 +115,26 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       panelData.items = this.handlePatchPanelData(panelData.items, value[value.length - 1]);
       let valueIdx = 0
       for (let i = 0; i < panelData.items.length; i++) {
-        let panelIdx = i;
-        if (groupCode == '0') panelIdx++;
-        let dataItem = panelData.items[panelIdx];
+        if (groupCode == '0' && i == 0) i++;
+        let dataItem = panelData.items[i];
+        valueIdx = value.findIndex(vItem => vItem.level == dataItem.level);
         dataItem.entry = true;
-        if (dataItem.level !== value[valueIdx].level) {
+        if (valueIdx == -1) {
           continue;
         } else {
           dataItem.title = value[valueIdx].name;
-        }
-        if (valueIdx == value.length - 1) {
-          // 最后一级要把数据初始化出来
-          let res = await this.searchArea({
-            groupCode,
-            parentCode: value[valueIdx].parentCode,
-            level: value[valueIdx].level
-          });
-          if (res.errorCode === 0) {
-            dataItem.items = res.data;
+          if (value[valueIdx].level == panelData.maxLevel) {
+            // 最后一级要把数据初始化出来
+            let res = await this.searchArea({
+              groupCode,
+              parentCode: value[valueIdx].parentCode,
+              level: value[valueIdx].level
+            });
+            if (res.errorCode === 0) {
+              dataItem.items = res.data;
+            }
+            break;
           }
-          break;
-        } else {
-          valueIdx++;
         }
       }
       for (let j = 0; j < dataSource.length; j++) {

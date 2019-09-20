@@ -98,12 +98,47 @@ class Demo1 extends React.Component {
       }
     ]
 
+    let test1 = [{
+      addressType: 2,
+      code: "CN",
+      groupCode: "0",
+      level: 1,
+      name: "中国",
+      parentCode: null,
+      parents: null
+    }, {
+      addressType: 2,
+      code: "310000",
+      groupCode: "0",
+      level: 2,
+      name: "上海市",
+      parentCode: "CN",
+      parents: null
+    }, {
+      addressType: 2,
+      code: "310100",
+      groupCode: "0",
+      level: 3,
+      name: "上海市",
+      parentCode: "310000",
+      parents: null
+    }, {
+      addressType: 2,
+      code: "310109",
+      groupCode: "0",
+      level: 4,
+      name: "虹口区",
+      parentCode: "310100"
+    }]
+
     return (
       <DemoContainer>
         <div>
           <FormItem label="地址">
             {
-              form.getFieldDecorator('address')(
+              form.getFieldDecorator('address', {
+                initialValue: test1
+              })(
                 <AddressSelector
                   type={1}
                   topTabData={groups}
