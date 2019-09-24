@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { storiesOf } from '@storybook/react';
 import { ProductCard } from '../components';
-import addressDoc from '../components/ProductCard/README.md';
+import productCardDoc from '../components/ProductCard/README.md';
 import DemoContainer from '../tools/DemoContainer';
 import { handleLogin } from '../utils/utils';
 import { Col, Row } from 'antd';
@@ -70,5 +70,5 @@ class Demo1 extends React.Component {
 storiesOf('ProductCard', module)
   .add('Products',
     () => <Demo1 />,
-    { notes: addressDoc }
+    { notes: productCardDoc }
   )

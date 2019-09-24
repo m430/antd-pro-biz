@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { WaybillNoSelect } from '../components';
-import addressDoc from '../components/WaybillNoSelect/README.md';
+import waybillNoSelectDoc from '../components/WaybillNoSelect/README.md';
 import DemoContainer from '../tools/DemoContainer';
 
 class Demo1 extends React.Component {
@@ -34,5 +34,5 @@ class Demo1 extends React.Component {
 storiesOf('WaybillNoSelect', module)
   .add('WaybillNoInput',
     () => <Demo1 />,
-    { notes: addressDoc }
+    { notes: waybillNoSelectDoc }
   )
