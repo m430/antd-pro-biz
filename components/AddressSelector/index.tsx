@@ -314,22 +314,26 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   handlePatchPanelData = (tabDatas: Array<TabData>, lastItem: Item): Array<TabData> => {
-    let lastData = tabDatas[tabDatas.length - 1];
-    let betweenLastLevel = lastItem.level - lastData.level;
-    if (betweenLastLevel > 0) { // 点击的级别大于tab最后一个的级别
-      // 补齐level
-      for (let i = lastData.level + 1; i <= lastItem.level; i++) {
-        tabDatas.push({
+    let newDatas: Array<TabData> = [];
+
+    for (let i = 0; i < tabDatas.length; i++) {
+      let currentData = tabDatas[i];
+      if (currentData.level <= lastItem.level || i == 0) {
+        newDatas.push(currentData);
+      }
+    }
+
+    if (newDatas.length > 0 && newDatas[newDatas.length - 1].level < lastItem.level) {
+      for (let j = newDatas[newDatas.length - 1].level + 1; j <= lastItem.level; j++) {
+        newDatas.push({
           title: '',
-          level: i,
+          level: j,
           entry: false,
           items: []
         });
       }
-    } else {
-      tabDatas = tabDatas.slice(0, tabDatas.length - Math.abs(betweenLastLevel));
     }
-    return tabDatas;
+    return newDatas;
   }
 
   render() {

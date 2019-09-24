@@ -137,7 +137,7 @@ class Demo1 extends React.Component {
           <FormItem label="地址">
             {
               form.getFieldDecorator('address', {
-                initialValue: test1
+                initialValue: []
               })(
                 <AddressSelector
                   type={1}
