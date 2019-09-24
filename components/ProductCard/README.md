@@ -18,13 +18,11 @@
 
 ```json
 {
-  id: string;
-  name: string;
-  introduction: string;
-  addressType: number;
-  brand: string;
-  image: string;
-  serviceTypes: any[];
-  tagNameList: string[];
+  id: string;                // Product ID
+  name: string;              // Product Name
+  introduction: string;      // Product Intro
+  brand: string;             // 所属品牌：包达天下
+  image: string;              // 产品主图
+  tagNameList: string[];      // 产品特性
 }
 ```

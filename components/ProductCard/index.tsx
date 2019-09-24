@@ -12,15 +12,16 @@ export interface ProductInfo {
   id: string;
   name: string;
   introduction: string;
-  addressType: number;
   brand: string;
   image: string;
-  serviceTypes?: any[];
+  // addressType: number;
+  // serviceTypes?: any[];
   tagNameList?: string[];
 }
 
 export interface ProductCardProps {
   item: ProductInfo;
+  link: string;
 }
 
 export interface ProductCardState {
@@ -38,11 +39,8 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
   }
 
   render() {
-    const { item } = this.props;
+    const { item, link } = this.props;
 
-    let params = JSON.stringify({
-      transportType: item.addressType,
-    });
     const iconType = 'icon-' + item.brand;
     const tags = item.tagNameList ? (
       item.tagNameList.map((tag: string, index: number) => {
@@ -56,7 +54,7 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
         <div className="productTag" />
       );
     return (
-      <Link to={`/order/product-list/create-order/${item.id}?${params}`}>
+      <Link to={link}>
         <Card
           hoverable
           cover={

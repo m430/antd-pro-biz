@@ -52,15 +52,21 @@ class Demo1 extends React.Component {
           <Row type="flex" justify="center" align="bottom" gutter={24}
             style={{ width: '1136px', marginLeft: 'auto', marginRight: 'auto' }}
           >
-            {products.map(item => (
-              <Col
-                key={item.id}
-                span={6}
-                style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}
-              >
-                <ProductCard item={item} selectedServices={[]} ></ProductCard>
-              </Col>
-            ))}
+            {products.map(item => {
+              let params = JSON.stringify({
+                transportType: item.addressType,
+              });
+              let link = `/order/product-list/create-order/${item.id}?${params}`;
+              return (
+                <Col
+                  key={item.id}
+                  span={6}
+                  style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}
+                >
+                  <ProductCard item={item} link={link} ></ProductCard>
+                </Col>
+              )
+            })}
           </Row>
         </MemoryRouter>
       </DemoContainer>
