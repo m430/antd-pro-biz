@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { TabCascader, PanelData, Item, Result } from 'antd-pro-toolkit';
-import { CascaderProps, TabData } from 'antd-pro-toolkit/lib/TabCascader';
+import { CascaderProps, TabData } from 'antd-pro-toolkit/es/TabCascader';
 
 export interface GroupData {
   code: string;
@@ -11,7 +11,6 @@ export interface GroupData {
 
 export interface AddressSelectorProps extends CascaderProps {
   type?: number;
-  value?: Array<Item>;
   topTabData: Array<GroupData>;
   onSearch: (params?: any) => Promise<Result>;
 }
@@ -40,18 +39,22 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   componentWillReceiveProps(nextProps: AddressSelectorProps) {
     const { topTabData, value } = nextProps;
-    this.initDataSource(topTabData, value);
+    const { dataSource } = this.state;
+    if (topTabData != this.props.topTabData) {
+      this.initDataSource(topTabData, value);
+    }
+    if (!value && value != this.props.value && topTabData && topTabData.length > 0 && dataSource.length > 0) {
+      this.initDataSource(topTabData, value);
+    }
   }
 
   initDataSource = async (topTabData: Array<GroupData>, value?: Array<Item>) => {
-    let { dataSource } = this.state;
+    let { dataSource, hotCities } = this.state;
 
     // 只初始化一次
-    let hotCities: Array<Item> = [];
     if (hotCities.length == 0) {
       let resFirst = await this.searchArea({ isHot: true });
       hotCities = resFirst.data || [];
-
       this.setState({ hotCities });
     }
 
@@ -66,7 +69,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       if (g.code === '0') {
         dataItem.items = [
           {
-            title: '常用市',
+            title: '热门',
             level: 3,
             entry: false,
             items: hotCities
@@ -100,7 +103,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       return dataItem;
     });
     if (value && value.length > 0) {
-      this.setInitialValue(dataSource, value);
+      await this.setInitialValue(dataSource, value);
     }
     this.setState({ dataSource });
   }
@@ -112,24 +115,26 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       panelData.items = this.handlePatchPanelData(panelData.items, value[value.length - 1]);
       let valueIdx = 0
       for (let i = 0; i < panelData.items.length; i++) {
-        let panelIdx = i;
-        if (groupCode == '0') panelIdx++;
-        let dataItem = panelData.items[panelIdx];
+        if (groupCode == '0' && i == 0) i++;
+        let dataItem = panelData.items[i];
+        valueIdx = value.findIndex(vItem => vItem.level == dataItem.level);
         dataItem.entry = true;
-        if (dataItem.level !== value[valueIdx].level) {
+        if (valueIdx == -1) {
           continue;
         } else {
           dataItem.title = value[valueIdx].name;
-        }
-        if (valueIdx == value.length - 1) {
-          // 最后一级要把数据初始化出来
-          let res = await this.searchArea({ parentCode: value[valueIdx].parentCode, level: value[valueIdx].level });
-          if (res.errorCode === 0) {
-            dataItem.items = res.data;
+          if (value[valueIdx].level == panelData.maxLevel) {
+            // 最后一级要把数据初始化出来
+            let res = await this.searchArea({
+              groupCode,
+              parentCode: value[valueIdx].parentCode,
+              level: value[valueIdx].level
+            });
+            if (res.errorCode === 0) {
+              dataItem.items = res.data;
+            }
+            break;
           }
-          break;
-        } else {
-          valueIdx++;
         }
       }
       for (let j = 0; j < dataSource.length; j++) {
@@ -163,8 +168,20 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   handleTopTabChange = (topKey: number) => {
-    const { dataSource } = this.state;
+    let { dataSource } = this.state;
     let tabData = dataSource[topKey].items;
+
+    dataSource = dataSource.map((ds: PanelData) => {
+      if (ds.code === '0') {
+        ds.items = ds.items.slice(0, 2);
+      } else if (ds.code === '1') {
+        ds.items = ds.items.slice(0, 1);
+      } else if (ds.code === '2') {
+        ds.items = ds.items.slice(0, 1);
+      }
+      return ds;
+    });
+
     if (topKey != 0 && tabData.length > 0 && tabData[0].items.length === 0) {
       this.searchArea({
         groupCode: dataSource[topKey].code,
@@ -204,6 +221,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   buildDataSource = (key: number, topKey: number, item: Item, data: Array<Item>) => {
     let { dataSource } = this.state;
+    let panelData: PanelData = dataSource[topKey];
     let tabData = dataSource[topKey].items;
     let currentData = tabData[key];
     if (key == 0 && topKey == 0) {
@@ -215,7 +233,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       tabData[0].entry = false;
       tabData[key].title = item.name;
     }
-    if (item.level !== 4) {
+    if (item.level !== panelData.maxLevel) {
       tabData.push({
         title: '请选择',
         level: currentData.level + 1,
@@ -260,7 +278,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
           continue;
         }
         let level = dataItem.level;
-        dataItem.title = level === item.level ? item.name : item[`areaName${level}`];
+        dataItem.title = level === item.level ? item.name : item.parents[item.parents.length - 1].name;
         dataItem.entry = true;
         dataItem.items = [];
       }
@@ -296,27 +314,31 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   handlePatchPanelData = (tabDatas: Array<TabData>, lastItem: Item): Array<TabData> => {
-    let lastData = tabDatas[tabDatas.length - 1];
-    let betweenLastLevel = lastItem.level - lastData.level;
-    if (betweenLastLevel > 0) { // 点击的级别大于tab最后一个的级别
-      // 补齐level
-      for (let i = lastData.level + 1; i <= lastItem.level; i++) {
-        tabDatas.push({
+    let newDatas: Array<TabData> = [];
+
+    for (let i = 0; i < tabDatas.length; i++) {
+      let currentData = tabDatas[i];
+      if (currentData.level <= lastItem.level || i == 0) {
+        newDatas.push(currentData);
+      }
+    }
+
+    if (newDatas.length > 0 && newDatas[newDatas.length - 1].level < lastItem.level) {
+      for (let j = newDatas[newDatas.length - 1].level + 1; j <= lastItem.level; j++) {
+        newDatas.push({
           title: '',
-          level: i,
+          level: j,
           entry: false,
           items: []
         });
       }
-    } else {
-      tabDatas = tabDatas.slice(0, tabDatas.length - Math.abs(betweenLastLevel));
     }
-    return tabDatas;
+    return newDatas;
   }
 
   render() {
+    const { type, topTabData, onSearch, ...restProps } = this.props;
     const { dataSource } = this.state;
-    const { placeholder, hint, addonAfter, style, className, onChange, value } = this.props;
 
     return (
       <TabCascader
@@ -325,14 +347,8 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         onItemClick={this.handleItemClick}
         onSearchItemClick={this.handleSearchItemClick}
         onSearch={this.handleSearch}
-        onChange={onChange}
-        value={value}
-        style={style}
-        className={className}
         dataSource={dataSource}
-        placeholder={placeholder}
-        addonAfter={addonAfter}
-        hint={hint}
+        {...restProps}
       />
     )
   }

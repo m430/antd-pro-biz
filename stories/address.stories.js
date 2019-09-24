@@ -3,15 +3,19 @@ import { storiesOf } from '@storybook/react';
 import { AddressSelector } from '../components';
 import addressDoc from '../components/AddressSelector/README.md';
 import DemoContainer from '../tools/DemoContainer';
-import { Icon } from 'antd';
+import { Icon, Form, Button, Row } from 'antd';
 import axios from '../http';
 
+const FormItem = Form.Item;
+
+@Form.create()
 class Demo1 extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      groups: []
+      groups: [],
+      selectedItems: []
     }
   }
 
@@ -20,13 +24,13 @@ class Demo1 extends React.Component {
   }
 
   handleSearch = (params) => {
-    return axios.get('/api/v1/areas/search', {
+    return axios.get('/api/v1/base/areas/search', {
       params
     });
   }
 
   handleSearchGroup = (params) => {
-    return axios.get('/api/v1/areas/search/group', {
+    return axios.get('/api/v1/base/areas/group', {
       params
     })
   }
@@ -39,7 +43,7 @@ class Demo1 extends React.Component {
         if (g.code == '0') {
           g.maxLevel = 4;
         } else if (g.code == '1') {
-          g.maxLevel = 3;
+          g.maxLevel = 1;
         } else {
           g.maxLevel = 2;
         }
@@ -51,21 +55,32 @@ class Demo1 extends React.Component {
 
   handleChange = (selectedItems) => {
     console.log(selectedItems);
+    this.setState({
+      selectedItems
+    });
   }
 
+  handleSubmit = () => {
+    const { form } = this.props;
+    form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+      console.log('values--->', values);
+    });
+  };
+
+  handleClear = () => {
+    const { form } = this.props;
+    form.resetFields();
+  };
+
   render() {
+    const { form } = this.props;
     const { groups } = this.state;
 
     let test = [
       {
-        areaCode1: "CN",
-        areaCode2: "130000",
-        areaCode3: "130600",
-        areaCode4: null,
-        areaName1: "中国",
-        areaName2: "河北省",
-        areaName3: "保定市",
-        areaName4: null,
         code: "130600",
         groupCode: "0",
         id: 54,
@@ -74,14 +89,6 @@ class Demo1 extends React.Component {
         parentCode: "130000",
       },
       {
-        areaCode1: "CN",
-        areaCode2: "130000",
-        areaCode3: "130600",
-        areaCode4: "130602",
-        areaName1: "中国",
-        areaName2: "河北省",
-        areaName3: "保定市",
-        areaName4: "竞秀区",
         code: "130602",
         groupCode: "0",
         id: null,
@@ -91,25 +98,70 @@ class Demo1 extends React.Component {
       }
     ]
 
+    let test1 = [{
+      addressType: 2,
+      code: "CN",
+      groupCode: "0",
+      level: 1,
+      name: "中国",
+      parentCode: null,
+      parents: null
+    }, {
+      addressType: 2,
+      code: "310000",
+      groupCode: "0",
+      level: 2,
+      name: "上海市",
+      parentCode: "CN",
+      parents: null
+    }, {
+      addressType: 2,
+      code: "310100",
+      groupCode: "0",
+      level: 3,
+      name: "上海市",
+      parentCode: "310000",
+      parents: null
+    }, {
+      addressType: 2,
+      code: "310109",
+      groupCode: "0",
+      level: 4,
+      name: "虹口区",
+      parentCode: "310100"
+    }]
+
     return (
       <DemoContainer>
-        <AddressSelector
-          type={1}
-          topTabData={groups}
-          onSearch={this.handleSearch}
-          onChange={this.handleChange}
-          placeholder="请选择地址"
-          addonAfter={<Icon type="ellipsis" />}
-          value={test}
-          style={{ width: 500 }}
-          hint="温馨提示：支持中文、拼音或首字母，如：西安 或 XA"
-        />
+        <div>
+          <FormItem label="地址">
+            {
+              form.getFieldDecorator('address', {
+                initialValue: []
+              })(
+                <AddressSelector
+                  type={1}
+                  topTabData={groups}
+                  onSearch={this.handleSearch}
+                  onChange={this.handleChange}
+                  placeholder="请选择地址"
+                  addonAfter={<Icon type="ellipsis" />}
+                  style={{ width: 500 }}
+                  hint="温馨提示：支持中文、拼音或首字母，如：西安 或 XA"
+                  colSpan={8}
+                />
+              )
+            }
+          </FormItem>
+          <Button type="primary" onClick={this.handleSubmit} style={{ marginRight: 12 }}>提交</Button>
+          <Button type="primary" onClick={this.handleClear}>重置</Button>
+        </div>
       </DemoContainer>
     )
   }
 }
 storiesOf('Address', module)
-  .add('TabCascader',
+  .add('AddressSelector',
     () => <Demo1 />,
     { notes: addressDoc }
   )

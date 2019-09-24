@@ -4,7 +4,7 @@
 ## Usage
 
 ```bash
-npm install --save antd-pro-biz
+npm install --save antd-pro-biz antd-pro-toolkit
 ```
 
 ```javascript
