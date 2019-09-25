@@ -162,11 +162,6 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     return res;
   }
 
-  handleSearch = async (val: string) => {
-    let res = await this.searchArea({ content: val });
-    return res.data;
-  }
-
   handleTopTabChange = (topKey: number) => {
     let { dataSource } = this.state;
     let tabData = dataSource[topKey].items;
@@ -278,7 +273,17 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
           continue;
         }
         let level = dataItem.level;
-        dataItem.title = level === item.level ? item.name : item.parents[item.parents.length - 1].name;
+        let title = "";
+        let parent = _.find<Item>(item.parents, (pItem) => pItem.level == level);
+        if (level === item.level) {
+          title = item.name;
+        } else {
+          if (!parent) {
+            throw new Error(`item ${item.name} parent data is correct.`);
+          }
+          title = parent.name;
+        }
+        dataItem.title = title;
         dataItem.entry = true;
         dataItem.items = [];
       }
@@ -336,6 +341,11 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     return newDatas;
   }
 
+  handleReset = () => {
+    const { topTabData } = this.props;
+    this.initDataSource(topTabData, []);
+  }
+
   render() {
     const { type, topTabData, onSearch, ...restProps } = this.props;
     const { dataSource } = this.state;
@@ -346,7 +356,8 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         onTopTabChange={this.handleTopTabChange}
         onItemClick={this.handleItemClick}
         onSearchItemClick={this.handleSearchItemClick}
-        onSearch={this.handleSearch}
+        onSearch={this.searchArea}
+        onClear={this.handleReset}
         dataSource={dataSource}
         {...restProps}
       />
