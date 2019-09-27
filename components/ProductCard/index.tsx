@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Card } from 'antd';
+<<<<<<< HEAD
+=======
+import MyIcon from '../../tools/MyIcon';
+>>>>>>> 073ce645735447a67f4cbf54502537ed6fa90772
 import { Ellipsis } from 'antd-pro-toolkit';
 import './style';
 
@@ -17,7 +21,10 @@ export interface ProductInfo {
 
 export interface ProductCardProps {
   item: ProductInfo;
+<<<<<<< HEAD
   brandIcon: React.ReactNode;
+=======
+>>>>>>> 073ce645735447a67f4cbf54502537ed6fa90772
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined;
 }
 
@@ -32,7 +39,11 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
   }
 
   render() {
+<<<<<<< HEAD
     const { item, onClick, brandIcon } = this.props;
+=======
+    const { item, onClick } = this.props;
+>>>>>>> 073ce645735447a67f4cbf54502537ed6fa90772
 
     const tags = item.tagNameList ? (
       item.tagNameList.map((tag: string, index: number) => {
