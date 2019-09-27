@@ -63,7 +63,7 @@ class Demo1 extends React.Component {
                   span={6}
                   style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}
                 >
-                  <ProductCard item={item} link={link} ></ProductCard>
+                  <ProductCard item={item} onClick={() => console.log(item.name + " clicked")} ></ProductCard>
                 </Col>
               )
             })}

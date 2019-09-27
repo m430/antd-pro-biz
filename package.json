@@ -93,7 +93,7 @@
   },
   "dependencies": {
     "antd": "^3.13.6",
-    "antd-pro-toolkit": "^0.4.0",
+    "antd-pro-toolkit": "^0.4.5",
     "classnames": "^2.2.6",
     "lodash": "^4.17.15",
     "lodash-decorators": "^6.0.1",
