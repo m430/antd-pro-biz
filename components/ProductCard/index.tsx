@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Card } from 'antd';
-import MyIcon from '../../tools/MyIcon';
 import { Ellipsis } from 'antd-pro-toolkit';
 import './style';
 
@@ -13,13 +12,12 @@ export interface ProductInfo {
   introduction: string;
   brand: string;
   image: string;
-  // addressType: number;
-  // serviceTypes?: any[];
   tagNameList?: string[];
 }
 
 export interface ProductCardProps {
   item: ProductInfo;
+  brandIcon: React.ReactNode;
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined;
 }
 
@@ -33,14 +31,9 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
     super(props);
   }
 
-  componentDidMount() {
-    const { } = this.props;
-  }
-
   render() {
-    const { item, onClick } = this.props;
+    const { item, onClick, brandIcon } = this.props;
 
-    const iconType = 'icon-' + item.brand;
     const tags = item.tagNameList ? (
       item.tagNameList.map((tag: string, index: number) => {
         return (
@@ -65,7 +58,6 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
               }
             />
           }
-          // headStyle={{ lineHeight: 1, marginBottom: 30 }}
           bodyStyle={{
             padding: '20px 12px 12px',
             height: 122,
@@ -89,25 +81,11 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
               </Ellipsis>
             }
           />
-          <div
-            style={{
-              height: 20,
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'start',
-                alignContent: 'center',
-              }}
-            >
+          <div className="featuresContainer">
+            <div className="tagContainer">
               {tags}
             </div>
-            <MyIcon type={iconType} style={{ fontSize: 30, marginRight: -5 }} />
+            {brandIcon}
           </div>
         </Card>
       </div>
