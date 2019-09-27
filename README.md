@@ -15,4 +15,12 @@ import { AddressSelector } from 'antd-pro-biz';
 
 - [x] AddressSelector
 
+## token
+Some story need to comunicate with server to fetch data, and need to login first, so you need to create a token file(`token.js`) like below, otherwise you will get some error.
 
+``` javascript
+import Des from './utils/des';
+
+export const username = "user"
+export const password = Des.enc("*******")
+```

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Card } from 'antd';
-import Link from 'umi/link';
 import MyIcon from '../../tools/MyIcon';
 import { Ellipsis } from 'antd-pro-toolkit';
 import './style';
@@ -21,7 +20,7 @@ export interface ProductInfo {
 
 export interface ProductCardProps {
   item: ProductInfo;
-  link: string;
+  onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined;
 }
 
 export interface ProductCardState {
@@ -39,7 +38,7 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
   }
 
   render() {
-    const { item, link } = this.props;
+    const { item, onClick } = this.props;
 
     const iconType = 'icon-' + item.brand;
     const tags = item.tagNameList ? (
@@ -54,7 +53,7 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
         <div className="productTag" />
       );
     return (
-      <Link to={link}>
+      <div onClick={onClick}>
         <Card
           hoverable
           cover={
@@ -111,7 +110,7 @@ export default class ProductCard extends Component<ProductCardProps, ProductCard
             <MyIcon type={iconType} style={{ fontSize: 30, marginRight: -5 }} />
           </div>
         </Card>
-      </Link>
+      </div>
     );
   }
 }
