@@ -8,6 +8,58 @@ import axios from '../http';
 
 const FormItem = Form.Item;
 
+let test = [
+  {
+    code: "130600",
+    groupCode: "0",
+    id: 54,
+    level: 3,
+    name: "保定市",
+    parentCode: "130000",
+  },
+  {
+    code: "130602",
+    groupCode: "0",
+    id: null,
+    level: 4,
+    name: "竞秀区",
+    parentCode: "130600",
+  }
+]
+
+let test1 = [{
+  addressType: 2,
+  code: "CN",
+  groupCode: "0",
+  level: 1,
+  name: "中国",
+  parentCode: null,
+  parents: null
+}, {
+  addressType: 2,
+  code: "310000",
+  groupCode: "0",
+  level: 2,
+  name: "上海市",
+  parentCode: "CN",
+  parents: null
+}, {
+  addressType: 2,
+  code: "310100",
+  groupCode: "0",
+  level: 3,
+  name: "上海市",
+  parentCode: "310000",
+  parents: null
+}, {
+  addressType: 2,
+  code: "310109",
+  groupCode: "0",
+  level: 4,
+  name: "虹口区",
+  parentCode: "310100"
+}]
+
 @Form.create()
 class Demo1 extends React.Component {
 
@@ -72,64 +124,12 @@ class Demo1 extends React.Component {
 
   handleClear = () => {
     const { form } = this.props;
-    form.resetFields();
+    form.setFieldsValue({'address': test});
   };
 
   render() {
     const { form } = this.props;
     const { groups } = this.state;
-
-    let test = [
-      {
-        code: "130600",
-        groupCode: "0",
-        id: 54,
-        level: 3,
-        name: "保定市",
-        parentCode: "130000",
-      },
-      {
-        code: "130602",
-        groupCode: "0",
-        id: null,
-        level: 4,
-        name: "竞秀区",
-        parentCode: "130600",
-      }
-    ]
-
-    let test1 = [{
-      addressType: 2,
-      code: "CN",
-      groupCode: "0",
-      level: 1,
-      name: "中国",
-      parentCode: null,
-      parents: null
-    }, {
-      addressType: 2,
-      code: "310000",
-      groupCode: "0",
-      level: 2,
-      name: "上海市",
-      parentCode: "CN",
-      parents: null
-    }, {
-      addressType: 2,
-      code: "310100",
-      groupCode: "0",
-      level: 3,
-      name: "上海市",
-      parentCode: "310000",
-      parents: null
-    }, {
-      addressType: 2,
-      code: "310109",
-      groupCode: "0",
-      level: 4,
-      name: "虹口区",
-      parentCode: "310100"
-    }]
 
     return (
       <DemoContainer>
@@ -158,7 +158,7 @@ class Demo1 extends React.Component {
             }
           </FormItem>
           <Button type="primary" onClick={this.handleSubmit} style={{ marginRight: 12 }}>提交</Button>
-          <Button type="primary" onClick={this.handleClear}>重置</Button>
+          <Button type="primary" onClick={this.handleClear}>Form.setFieldsValue</Button>
         </div>
       </DemoContainer>
     )

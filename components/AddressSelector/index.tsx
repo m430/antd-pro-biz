@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { isArrayEqual } from '../utils/tools';
 import { TabCascader, PanelData, Item, Result } from 'antd-pro-toolkit';
 import { CascaderProps, TabData } from 'antd-pro-toolkit/es/TabCascader';
 
@@ -16,8 +17,9 @@ export interface AddressSelectorProps extends CascaderProps {
 }
 
 export interface AddressSelectorState {
-  hotCities: Array<any>,
-  dataSource: Array<PanelData>
+  hotCities: Array<any>;
+  dataSource: Array<PanelData>;
+  isClickItem: Boolean;
 }
 
 export default class AddressSelector extends Component<AddressSelectorProps, AddressSelectorState> {
@@ -26,7 +28,8 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     super(props);
     this.state = {
       hotCities: [],
-      dataSource: []
+      dataSource: [],
+      isClickItem: false
     }
   }
 
@@ -39,11 +42,11 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   componentWillReceiveProps(nextProps: AddressSelectorProps) {
     const { topTabData, value } = nextProps;
-    const { dataSource } = this.state;
+    const { dataSource, isClickItem } = this.state;
     if (topTabData != this.props.topTabData) {
       this.initDataSource(topTabData, value);
     }
-    if (!value && value != this.props.value && topTabData && topTabData.length > 0 && dataSource.length > 0) {
+    if (!isClickItem && !isArrayEqual(value, this.props.value) && topTabData && topTabData.length > 0 && dataSource.length > 0) {
       this.initDataSource(topTabData, value);
     }
   }
@@ -251,12 +254,18 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       this.setState({ dataSource });
       return Promise.resolve(dataSource[topKey].items.length - 1);
     }
+    this.setState({ isClickItem: true });
     return this.searchArea({
       groupCode: item.groupCode,
       parentCode: item.code,
       level: item.level + 1
     }).then(res => {
       this.buildDataSource(key, topKey, item, res.data);
+    }).finally(() => {
+      // Hack to not init datasource in componentWillReceiveProps
+      setTimeout(() => {
+        this.setState({ isClickItem: false })
+      }, 100);
     });
   }
 
