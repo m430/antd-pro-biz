@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { isArrayEqual } from '../utils/tools';
-import { TabCascader, PanelData, Item, Result } from 'antd-pro-toolkit';
-import { CascaderProps, TabData } from 'antd-pro-toolkit/es/TabCascader';
+import { TabCascader } from 'antd-pro-toolkit';
+import { CascaderProps, TabData, PanelData, Item, Result } from 'antd-pro-toolkit/lib/TabCascader';
 
 export interface GroupData {
   code: string;
