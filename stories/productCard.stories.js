@@ -4,6 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { ProductCard } from '../components';
 import productCardDoc from '../components/ProductCard/README.md';
 import DemoContainer from '../tools/DemoContainer';
+import MyIcon from '../tools/MyIcon';
 import { handleLogin } from '../utils/utils';
 import { Col, Row } from 'antd';
 import axios from '../http';
@@ -46,6 +47,7 @@ class Demo1 extends React.Component {
 
   render() {
     const { products } = this.state;
+
     return (
       <DemoContainer>
         <MemoryRouter>
@@ -56,14 +58,15 @@ class Demo1 extends React.Component {
               let params = JSON.stringify({
                 transportType: item.addressType,
               });
-              let link = `/order/product-list/create-order/${item.id}?${params}`;
+              const iconType = 'icon-' + item.brand;
+              let brandIcon = <MyIcon type={iconType} style={{ fontSize: 30, marginRight: -5 }} />;
               return (
                 <Col
                   key={item.id}
                   span={6}
                   style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}
                 >
-                  <ProductCard item={item} onClick={() => console.log(item.name + " clicked")} ></ProductCard>
+                  <ProductCard item={item} onClick={() => console.log(item.name + " clicked")} brandIcon={brandIcon} ></ProductCard>
                 </Col>
               )
             })}
