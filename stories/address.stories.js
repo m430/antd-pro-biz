@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { storiesOf } from '@storybook/react';
 import { AddressSelector } from '../components';
 import addressDoc from '../components/AddressSelector/README.md';
@@ -76,13 +77,13 @@ class Demo1 extends React.Component {
   }
 
   handleSearch = (params) => {
-    return axios.get('/api/v1/base/areas/search', {
+    return axios.get('/api/v1/base/ports/search', {
       params
     });
   }
 
   handleSearchGroup = (params) => {
-    return axios.get('/api/v1/base/areas/group', {
+    return axios.get('/api/v1/base/ports/group', {
       params
     })
   }
@@ -127,6 +128,16 @@ class Demo1 extends React.Component {
     form.setFieldsValue({'address': test});
   };
 
+  renderInputValue = (items) => {
+    if (_.isEmpty(items)) return "";
+    let lastItem = items[items.length - 1];
+    if (lastItem.level == 4) {
+      return lastItem.name;
+    } else {
+      return "";
+    }
+  }
+
   render() {
     const { form } = this.props;
     const { groups } = this.state;
@@ -151,7 +162,8 @@ class Demo1 extends React.Component {
                   inputProps={{
                     addonAfter: <Icon type="ellipsis" />,
                     placeholder: "请选择地址",
-                    allowClear: true
+                    allowClear: true,
+                    renderValue: this.renderInputValue
                   }}
                 />
               )

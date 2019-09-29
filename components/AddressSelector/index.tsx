@@ -17,7 +17,7 @@ export interface AddressSelectorProps extends CascaderProps {
 }
 
 export interface AddressSelectorState {
-  hotCities: Array<any>;
+  hotData: Array<Item>;
   dataSource: Array<PanelData>;
   isClickItem: Boolean;
 }
@@ -27,7 +27,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   constructor(props: AddressSelectorProps) {
     super(props);
     this.state = {
-      hotCities: [],
+      hotData: [],
       dataSource: [],
       isClickItem: false
     }
@@ -52,13 +52,16 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   initDataSource = async (topTabData: Array<GroupData>, value?: Array<Item>) => {
-    let { dataSource, hotCities } = this.state;
+    let { dataSource, hotData } = this.state;
 
     // 只初始化一次
-    if (hotCities.length == 0) {
+    if (hotData.length == 0) {
       let resFirst = await this.searchArea({ isHot: true });
-      hotCities = resFirst.data || [];
-      this.setState({ hotCities });
+      hotData = resFirst.data || [];
+      if (hotData.length == 0) {
+        throw new Error(`the hot data is empty, please check it.`);
+      }
+      this.setState({ hotData });
     }
 
     let groups = topTabData;
@@ -73,9 +76,9 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         dataItem.items = [
           {
             title: '热门',
-            level: 3,
+            level: hotData[0].level,
             entry: false,
-            items: hotCities
+            items: hotData
           },
           {
             title: '省/直辖市',
@@ -248,13 +251,18 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
   handleItemClick = (key: number, topKey: number, item: Item) => {
     let { dataSource } = this.state;
+    this.setState({ isClickItem: true });
     if (item.level === dataSource[topKey].maxLevel) {
       dataSource[topKey].items[key].title = item.name;
       dataSource[topKey].items[key].entry = true;
       this.setState({ dataSource });
-      return Promise.resolve(dataSource[topKey].items.length - 1);
+      return Promise.resolve(dataSource[topKey].items.length - 1).finally(() => {
+        setTimeout(() => {
+          this.setState({ isClickItem: false });
+        }, 60);
+      });
     }
-    this.setState({ isClickItem: true });
+
     return this.searchArea({
       groupCode: item.groupCode,
       parentCode: item.code,
