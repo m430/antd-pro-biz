@@ -8,20 +8,15 @@
 | ----------- | -------------------------------- | ------------------ | ------ |
 | type        | 寄/收地址类型，此处根据接口定义填入  | `any`              |        |
 | topTabData  | `Array<GroupData>`参考下面的Model | `Array`            |        |
-| value       | 选择的`item`值                   | `Array<Item>`      |        |
-| style       | 样式对象                         | `CSSProperties`    |        |
-| className   | 样式类                           | `String/Object`    |        |
-| placeholder | 输入框提示语                     | `String/ReactNode` |        |
-| addonAfter  | 输入框后置标签                   | `String/ReactNode` |        |
-| hint        | `Tab`选择下拉框上方的提示语      | `String/ReactNode` |        |
 
 ### Events
 
 | 参数     | 说明                       | 类型                    | 默认值 |
 | -------- | -------------------------- | ----------------------- | ------ |
 | onSearch | 搜索地址接口               | function(params)        | 无     |
-| onChange | 选择的`Item`发生变化的事件 | function(selectedItems) | 无     |
 
+
+> 注意： `AddressSelector`的Props支持所有`TabCascader`的属性，其余属性请参考[这里](https://m430.github.io/antd-pro-toolkit/?path=/info/advance--tabcascader)
 
 ### Models
 
