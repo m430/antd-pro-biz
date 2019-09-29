@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [0.2.4] (2019-09-24)
+  - fix: 修复`TabCascader`组件搜索选择时，异步渲染初始化数据导致的bug
+
 ## [0.2.1] (2019-09-24)
   - 添加`ProductCard`组件
   - 添加`WaybillNoSelect`组件
