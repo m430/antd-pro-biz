@@ -261,7 +261,15 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
           currentTabData.items[i].entry = false;
         }
       } else {
-        currentTabData.items[0].entry = false;
+        let zeroItem = currentTabData.items[0];
+        let firstItem = currentTabData.items[1];
+        if (zeroItem && firstItem) {
+          if (zeroItem.entry) {
+            currentTabData.items[1].entry = false;
+          } else if (firstItem.entry) {
+            currentTabData.items[0].entry = false;
+          }
+        }
       }
     }
 
