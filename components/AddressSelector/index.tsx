@@ -112,6 +112,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       await this.setInitialValue(dataSource, value);
     }
     this.setState({ dataSource });
+    return dataSource;
   }
 
   setInitialValue = async (dataSource: Array<PanelData>, value: Array<Item>) => {
@@ -273,6 +274,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       }
     }
 
+    dataSource[topKey].items[key].level = item.level;
     if (item.level === dataSource[topKey].maxLevel) {
       dataSource[topKey].items[key].title = item.name;
       dataSource[topKey].items[key].entry = true;
@@ -298,9 +300,11 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     });
   }
 
-  handleSearchItemClick = (item: Item) => {
+  handleSearchItemClick = async (item: Item) => {
+    const { topTabData } = this.props;
     let { dataSource } = this.state;
     let gCode = Number(item.groupCode);
+    dataSource = await this.initDataSource(topTabData, []);
     let maxLevel = dataSource[gCode].maxLevel;
     let groupData = dataSource[gCode].items;
     const fillGroupData = async () => {
@@ -338,7 +342,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       let res = await this.searchArea(query);
       if (item.level !== maxLevel) {
         groupData.push({
-          title: '请选择',
+          title: item.level == 1 ? '省/直辖市' : '请选择',
           level: item.level + 1,
           entry: true,
           items: res.data
