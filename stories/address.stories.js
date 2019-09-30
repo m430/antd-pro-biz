@@ -94,7 +94,7 @@ class Demo1 extends React.Component {
     if (resGroup.errorCode === 0) {
       groups = resGroup.data.map((g) => {
         if (g.code == '0') {
-          g.maxLevel = 4;
+          g.maxLevel = 3;
         } else if (g.code == '1') {
           g.maxLevel = 1;
         } else {
@@ -131,7 +131,7 @@ class Demo1 extends React.Component {
   renderInputValue = (items) => {
     if (_.isEmpty(items)) return "";
     let lastItem = items[items.length - 1];
-    if (lastItem.level == 4) {
+    if (lastItem.level == 3) {
       return lastItem.name;
     } else {
       return "";

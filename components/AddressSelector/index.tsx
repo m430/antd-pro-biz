@@ -99,7 +99,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       } else if (g.code === '2') {
         dataItem.items = [
           {
-            title: '海外',
+            title: '国家',
             level: 1,
             entry: false,
             items: []
@@ -238,7 +238,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       tabData.push({
         title: '请选择',
         level: currentData.level + 1,
-        entry: false,
+        entry: true,
         items: data
       });
     }
@@ -252,6 +252,19 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   handleItemClick = (key: number, topKey: number, item: Item) => {
     let { dataSource } = this.state;
     this.setState({ isClickItem: true });
+    let currentTabData = dataSource[topKey];
+    // 设置entry
+    if (topKey == 0) {
+      if (key == 0) {
+        let len = currentTabData.items.length;
+        for (let i = 1; i < len; i++) {
+          currentTabData.items[i].entry = false;
+        }
+      } else {
+        currentTabData.items[0].entry = false;
+      }
+    }
+
     if (item.level === dataSource[topKey].maxLevel) {
       dataSource[topKey].items[key].title = item.name;
       dataSource[topKey].items[key].entry = true;
@@ -319,7 +332,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         groupData.push({
           title: '请选择',
           level: item.level + 1,
-          entry: false,
+          entry: true,
           items: res.data
         });
       } else {
