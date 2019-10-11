@@ -276,7 +276,9 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
     dataSource[topKey].items[key].level = item.level;
     if (item.level === dataSource[topKey].maxLevel) {
-      dataSource[topKey].items[key].title = item.name;
+      if (topKey != 0 || key != 0) {
+        dataSource[topKey].items[key].title = item.name;
+      }
       dataSource[topKey].items[key].entry = true;
       this.setState({ dataSource });
       return Promise.resolve(dataSource[topKey].items.length - 1).finally(() => {
