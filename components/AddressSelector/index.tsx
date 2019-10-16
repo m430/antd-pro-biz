@@ -58,9 +58,6 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     if (hotData.length == 0) {
       let resFirst = await this.searchArea({ isHot: true });
       hotData = resFirst.data || [];
-      if (hotData.length == 0) {
-        throw new Error(`the hot data is empty, please check it.`);
-      }
       this.setState({ hotData });
     }
 
