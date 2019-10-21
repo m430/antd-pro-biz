@@ -77,13 +77,13 @@ class Demo1 extends React.Component {
   }
 
   handleSearch = (params) => {
-    return axios.get('/api/v1/base/ports/search', {
+    return axios.get('/api/v1/base/areas/search', {
       params
     });
   }
 
   handleSearchGroup = (params) => {
-    return axios.get('/api/v1/base/ports/group', {
+    return axios.get('/api/v1/base/areas/group', {
       params
     })
   }

@@ -73,7 +73,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         dataItem.items = [
           {
             title: '热门',
-            level: hotData[0].level,
+            level: hotData[0] ? hotData[0].level : 3,
             entry: false,
             items: hotData
           },
@@ -201,7 +201,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     if (key == 0 && dataSource[topKey].code == '0') {
       query.isHot = true;
     } else {
-      if (item) {
+      if (item && item.groupCode == `${topKey}`) {
         query.parentCode = item.parentCode;
       } else {
         query.level = level;
