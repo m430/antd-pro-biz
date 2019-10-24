@@ -87,7 +87,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       let isFirst = firstGroup.code == g.code
       if (g.code === '0') {
         let level = 3;
-        if (isFirst) {
+        if (isFirst && hotData.length > 0) {
           level = hotData[0].level;
         }
         dataItem.items = [
@@ -243,7 +243,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
     let panelData: PanelData = dataSource[topKey];
     let tabData = dataSource[topKey].items;
     let currentData = tabData[key];
-    if (key == 0 && topKey == 0) {
+    if (key == 0 && topKey == 0 && item.groupCode == '0') {
       tabData = tabData.slice(0, key + 2);
       tabData[1].title = '省/直辖市';
       tabData[1].entry = false;

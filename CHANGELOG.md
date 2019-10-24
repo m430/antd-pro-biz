@@ -1,7 +1,10 @@
 # CHANGELOG
 
+## [0.3.2] (2019-10-24)
+  - fix: 修复`AddressSelector`组件初始化数据只有国际时国家`Tab`下没有数据的问题。
+
 ## [0.2.4] (2019-09-24)
-  - fix: 修复`TabCascader`组件搜索选择时，异步渲染初始化数据导致的bug
+  - fix: 修复`AddressSelector`组件搜索选择时，异步渲染初始化数据导致的bug
 
 ## [0.2.1] (2019-09-24)
   - 添加`ProductCard`组件
