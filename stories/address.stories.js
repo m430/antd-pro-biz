@@ -92,16 +92,17 @@ class Demo1 extends React.Component {
     let { groups } = this.state;
     let resGroup = await this.handleSearchGroup({ type: 1 });
     if (resGroup.errorCode === 0) {
-      groups = resGroup.data.map((g) => {
-        if (g.code == '0') {
-          g.maxLevel = 3;
-        } else if (g.code == '1') {
-          g.maxLevel = 1;
-        } else {
-          g.maxLevel = 2;
-        }
-        return g;
-      });
+      groups = resGroup.data
+        .map((g) => {
+          if (g.code == '0') {
+            g.maxLevel = 3;
+          } else if (g.code == '1') {
+            g.maxLevel = 1;
+          } else {
+            g.maxLevel = 2;
+          }
+          return g;
+        });
     }
     this.setState({ groups });
   }
@@ -125,7 +126,7 @@ class Demo1 extends React.Component {
 
   handleClear = () => {
     const { form } = this.props;
-    form.setFieldsValue({'address': test});
+    form.setFieldsValue({ 'address': test });
   };
 
   renderInputValue = (items) => {

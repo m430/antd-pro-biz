@@ -52,16 +52,31 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   initDataSource = async (topTabData: Array<GroupData>, value?: Array<Item>) => {
+    if (topTabData.length == 0) {
+      throw new Error(`top data is empty.`);
+    }
+    
     let { dataSource, hotData } = this.state;
+    let groups = topTabData;
+    let firstGroup = topTabData[0];
 
     // 只初始化一次
     if (hotData.length == 0) {
-      let resFirst = await this.searchArea({ isHot: true });
+      let query: any = {};
+
+      if (firstGroup.code == '0') {
+        query.isHot = true;
+      } else if (firstGroup.code == '1') {
+        query.groupCode = firstGroup.code;
+      } else if (firstGroup.code == '2') {
+        query.groupCode = firstGroup.code
+      }
+      let resFirst = await this.searchArea(query);
       hotData = resFirst.data || [];
       this.setState({ hotData });
     }
 
-    let groups = topTabData;
+
     dataSource = groups.map((g: GroupData) => {
       let dataItem: PanelData = {
         title: g.name,
@@ -69,13 +84,18 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
         code: g.code,
         items: []
       }
+      let isFirst = firstGroup.code == g.code
       if (g.code === '0') {
+        let level = 3;
+        if (isFirst) {
+          level = hotData[0].level;
+        }
         dataItem.items = [
           {
             title: '热门',
-            level: hotData[0] ? hotData[0].level : 3,
+            level: level,
             entry: false,
-            items: hotData
+            items: isFirst ? hotData : []
           },
           {
             title: '省/直辖市',
@@ -90,7 +110,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
             title: '港澳台',
             level: 2,
             entry: false,
-            items: []
+            items: isFirst ? hotData : []
           }
         ]
       } else if (g.code === '2') {
@@ -99,7 +119,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
             title: '国家',
             level: 1,
             entry: false,
-            items: []
+            items: isFirst ? hotData : []
           }
         ]
       }
