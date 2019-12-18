@@ -77,13 +77,31 @@ class Demo1 extends React.Component {
   }
 
   handleSearch = (params) => {
-    return axios.get('/api/v1/base/areas/search', {
+    if (params.isHot !== undefined) {
+      return this.handleSearchHotCities(params);
+    }
+    if (params.parentCode) {
+      return this.handleSearchSubItems(params);
+    }
+    return axios.get('/api/v1/biz/address/search', {
+      params
+    });
+  }
+
+  handleSearchHotCities = (params) => {
+    return axios.get('/api/v1/biz/address/hot/cities', {
+      params
+    });
+  }
+
+  handleSearchSubItems = (params) => {
+    return axios.get('/api/v1/biz/address/subitem', {
       params
     });
   }
 
   handleSearchGroup = (params) => {
-    return axios.get('/api/v1/base/areas/group', {
+    return axios.get('/api/v1/biz/address/groups', {
       params
     })
   }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://magpiee.com.cn:28443';
+// axios.defaults.baseURL = 'https://magpiee.com.cn:28443';
 
 axios.interceptors.response.use(function (response) {
   // Do something with response data

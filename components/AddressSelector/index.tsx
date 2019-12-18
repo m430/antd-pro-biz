@@ -172,13 +172,11 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   }
 
   searchArea = async ({
-    isHot = false,
     pageSize = 999,
     ...rest
   }: any) => {
     const { type, onSearch } = this.props;
     let res = await onSearch({
-      isHot,
       pageSize,
       type,
       ...rest
@@ -203,6 +201,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
     if (topKey != 0 && tabData.length > 0 && tabData[0].items.length === 0) {
       this.searchArea({
+        parentCode: dataSource[topKey].code,
         groupCode: dataSource[topKey].code,
         level: tabData[0].level
       }).then(res => {
@@ -216,7 +215,6 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   handleTabChange = (key: number, topKey: number, item: Item) => {
     const { dataSource } = this.state;
     let tabData = dataSource[topKey].items;
-    let level = tabData[key].level;
     let query: any = { groupCode: dataSource[topKey].code };
     if (key == 0 && dataSource[topKey].code == '0') {
       query.isHot = true;
@@ -224,7 +222,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       if (item && item.groupCode == `${topKey}`) {
         query.parentCode = item.parentCode;
       } else {
-        query.level = level;
+        query.parentCode = dataSource[topKey].code;
       }
     }
     return this.searchArea(query).then(res => {
