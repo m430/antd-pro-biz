@@ -182,7 +182,8 @@ class Demo1 extends React.Component {
                     addonAfter: <Icon type="ellipsis" />,
                     placeholder: "请选择地址",
                     allowClear: true,
-                    renderValue: this.renderInputValue
+                    renderValue: this.renderInputValue,
+                    size: 'large'
                   }}
                 />
               )

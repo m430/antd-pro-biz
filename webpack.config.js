@@ -19,6 +19,11 @@ function addLocales(webpackConfig) {
   }
   webpackConfig.entry[packageName] = './index-with-locales.js';
   webpackConfig.output.filename = '[name].js';
+  webpackConfig.output.library = {
+    root: 'AntdProBiz',
+    commonjs: 'antd-pro-biz',
+    amd: 'antd-pro-biz',
+  }
 }
 
 function externalMoment(config) {
