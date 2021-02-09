@@ -116,7 +116,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       } else if (g.code === '2') {
         dataItem.items = [
           {
-            title: '国家',
+            title: '国际及地区',
             level: 1,
             entry: false,
             items: isFirst ? hotData : []
@@ -201,7 +201,6 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
 
     if (topKey != 0 && tabData.length > 0 && tabData[0].items.length === 0) {
       this.searchArea({
-        parentCode: dataSource[topKey].code,
         groupCode: dataSource[topKey].code,
         level: tabData[0].level
       }).then(res => {
@@ -215,6 +214,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
   handleTabChange = (key: number, topKey: number, item: Item) => {
     const { dataSource } = this.state;
     let tabData = dataSource[topKey].items;
+    let level = tabData[key].level;
     let query: any = { groupCode: dataSource[topKey].code };
     if (key == 0 && dataSource[topKey].code == '0') {
       query.isHot = true;
@@ -222,7 +222,7 @@ export default class AddressSelector extends Component<AddressSelectorProps, Add
       if (item && item.groupCode == `${topKey}`) {
         query.parentCode = item.parentCode;
       } else {
-        query.parentCode = dataSource[topKey].code;
+        query.level = level;
       }
     }
     return this.searchArea(query).then(res => {
